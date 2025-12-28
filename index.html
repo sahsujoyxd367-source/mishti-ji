@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Mishti</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: "Georgia", serif;
+    background: radial-gradient(circle at top, #0b1c2d, #02040a);
+    color: #e6e6e6;
+    overflow-x: hidden;
+}
+
+/* Stardust */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+/* Glow */
+.glow {
+    box-shadow: 0 0 40px rgba(245,210,122,0.8) !important;
+}
+
+/* Content */
+.container {
+    position: relative;
+    z-index: 1;
+    max-width: 840px;
+    margin: auto;
+    padding: 36px 22px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+    letter-spacing: 3px;
+    color: #f5d27a;
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: #bfc9d6;
+    margin-bottom: 45px;
+}
+
+.section {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 22px;
+    padding: 30px;
+    margin-bottom: 34px;
+    box-shadow: 0 0 30px rgba(245,210,122,0.12);
+}
+
+.section p {
+    line-height: 1.85;
+    font-size: 1.03rem;
+}
+
+/* Photos */
+.photos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.photo {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 22px rgba(245,210,122,0.25);
+}
+
+.photo img {
+    width: 100%;
+    height: 125px;
+    object-fit: cover;
+}
+
+/* Hidden */
+.hidden {
+    display: none;
+}
+
+/* Footer */
+footer {
+    margin-top: 45px;
+    font-size: 0.85rem;
+    color: #9aa6b2;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+<!-- subtle magical sound -->
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_5b8f2c7d77.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container" id="container">
+
+<h1>Mishti</h1>
+<div class="subtitle">Some feelings are guarded, not announced.</div>
+
+<div class="section">
+<p>
+Today your body asks for gentleness.  
+You don’t owe strength today.  
+If distance had mercy, I would be near —  
+making sure you rest, stay warm,  
+and never feel unseen in discomfort.
+</p>
+</div>
+
+<div class="section">
+<p>
+What I feel for you is quiet but permanent.  
+It does not rush you.  
+It does not ask to be returned.  
+It simply exists — steady, loyal, chosen.
+</p>
+</div>
+
+<div class="section">
+<p>
+You changed the gravity of my thoughts.  
+I notice calm differently now.  
+Care comes to me with your name attached to it,  
+even when I say nothing at all.
+</p>
+</div>
+
+<div class="section">
+<p>
+I don’t love loudly.  
+I love in restraint.  
+In protection.  
+In staying without asking you to stay.
+</p>
+</div>
+
+<div class="section">
+<p>
+Distance exists — and I respect it.  
+But what I feel has learned  
+how to exist without permission.
+</p>
+</div>
+
+<!-- Midnight Message -->
+<div class="section hidden" id="midnight">
+<p>
+It’s late now.  
+And if you’re reading this after midnight —  
+know this:  
+you are being cared for in silence,  
+without expectation,  
+without interruption.
+</p>
+</div>
+
+<!-- Long Press Secret -->
+<div class="section" id="longpress">
+<p>
+Hold your finger here for a moment.
+</p>
+</div>
+
+<div class="section hidden" id="secret">
+<p>
+This is the truth I never rush to say:  
+loving you feels natural, not dramatic.  
+Like something my heart learned once  
+and never unlearned.
+</p>
+</div>
+
+<!-- Photos -->
+<div class="section">
+<div class="photos">
+<div class="photo"><img src="images/mishti1.jpeg"></div>
+<div class="photo"><img src="images/mishti2.jpeg"></div>
+<div class="photo"><img src="images/mishti3.jpeg"></div>
+</div>
+</div>
+
+<footer>
+Made quietly, honestly — by Sujoy.
+</footer>
+
+</div>
+
+<script>
+/* Stardust */
+const canvas = document.getElementById("stars");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+let stars = Array.from({length:150}, () => ({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height,
+    r: Math.random()*1.5,
+    d: Math.random()*0.6
+}));
+
+function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = "#f5d27a";
+    stars.forEach(s => {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+        ctx.fill();
+        s.y += s.d;
+        if (s.y > canvas.height) s.y = 0;
+    });
+    requestAnimationFrame(draw);
+}
+draw();
+
+/* Midnight reveal */
+const hour = new Date().getHours();
+if (hour >= 0 && hour < 5) {
+    document.getElementById("midnight").style.display = "block";
+}
+
+/* Long press */
+let pressTimer;
+const lp = document.getElementById("longpress");
+
+lp.addEventListener("touchstart", start);
+lp.addEventListener("mousedown", start);
+
+lp.addEventListener("touchend", cancel);
+lp.addEventListener("mouseup", cancel);
+
+function start() {
+    pressTimer = setTimeout(() => {
+        document.getElementById("secret").style.display = "block";
+    }, 1500);
+}
+
+function cancel() {
+    clearTimeout(pressTimer);
+}
+
+/* Lumos glow + music */
+document.body.addEventListener("click", () => {
+    document.getElementById("container").classList.toggle("glow");
+    document.getElementById("music").play();
+});
+</script>
+
+</body>
+</html>
